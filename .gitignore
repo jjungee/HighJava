@@ -1,0 +1,17 @@
+highJava.zip
+.metadata/
+argTest/.classpath
+argTest/.project
+argTest/.settings/
+argTest/bin/argTest/ArgTest.class
+argTest/bin/argTest/ContTest.class
+argTest/bin/
+javaIOTest/.classpath
+javaIOTest/.project
+javaIOTest/.settings/org.eclipse.jdt.core.prefs
+javaIOTest/bin/
+RemoteSystemsTempFiles/.project
+thradTest/.classpath
+thradTest/.project
+thradTest/.settings/
+thradTest/bin/
