@@ -1,11 +1,34 @@
 ﻿package kr.or.ddit.basic;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.nio.BufferOverflowException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class PhoneBookTest {
-
-
+	private static Map<String, Phone> phoneBookMap;
+	private Scanner scan;
+	private static String fileName = "phoneDate.dat";
+	private static boolean dataChange = false;	//데이터가 변경되었는지 여부를 나타내는 변수
+										//데이터가 변경되면 true가 된다.
+	
+	public PhoneBookTest() {
+		phoneBookMap = load();
+		
+		if(phoneBookMap == null){
+			phoneBookMap = new HashMap<>();
+		}
+		
+		scan = new Scanner(System.in);
+	}
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		
@@ -31,6 +54,7 @@ public class PhoneBookTest {
 	 		3. 전화번호 삭제
 	 		4. 전화번호 검색
 	 		5. 전화번호 전체출력
+	 		6. 전화번호 저장
 	 		0. 프로그램 종료
 	 		---------------
 	 		번호입력> 1
@@ -81,6 +105,8 @@ public class PhoneBookTest {
 						add = sc.nextLine();
 						
 						phoneBook.put(name, new Phone(name, tel, age, add));
+						dataChange = true;
+						save();
 					}
 					break;
 					
@@ -95,6 +121,7 @@ public class PhoneBookTest {
 							tel = sc.nextLine();
 							
 							phoneBook.get(name).setTel(tel);
+							dataChange = true;
 						}
 					
 					break;
@@ -106,6 +133,7 @@ public class PhoneBookTest {
 						System.out.println("해당 이름이 존재하지 않습니다.");
 					} else{
 						phoneBook.remove(name);
+						dataChange = true;
 					}
 					break;
 				case 4:
@@ -134,7 +162,15 @@ public class PhoneBookTest {
 						}
 					
 					break;
+				case 6:
+//					전화번호 정보를 파일로 저장하는 메서드
+					save();
+					break;
 				case 0:
+					if(dataChange == true){
+						save();
+					}
+					
 					System.out.println("종료");
 					System.exit(0);
 					break;
@@ -144,12 +180,57 @@ public class PhoneBookTest {
 		}//while
 		
 	}
-
 	
+	private Map<String, Phone> load(){
+		HashMap<String, Phone> pMap = null;
+		
+		File file = new File("d:/d_other" + fileName);
+		
+		if(!file.exists()){	//저장된 파일이 없으면
+			pMap = new HashMap<>();	//map객체를 새로 생성
+			return pMap;
+		}
+		
+		//저장된 파일이 있을 때 처리되는 곳
+		ObjectInputStream ois = null;
+		try {
+//			..입력용 스트림 객체 생성
+			ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
+			
+//			파일 내용을 읽어와 Map객체 변수에 저장한다.
+			pMap = (HashMap<String, Phone>)ois.readObject();
+		} catch (Exception e) {
+		}finally{
+			try {
+				ois.close();
+			} catch (Exception e2) {
+			}
+		}
+		
+		return pMap;
+	}
 	
+	private static void save(){
+		ObjectOutputStream oos = null;
+		try {
+			oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("d:/d_other/" + fileName)));
+			
+			oos.writeObject(phoneBookMap);
+			
+			System.out.println("저장이 완료되었습니다.");
+			
+			dataChange = false;
+		} catch (Exception e) {
+		} finally{
+			try {
+				oos.close();
+			} catch (Exception e) {
+			}
+		}
+	}
 }
 
-class Phone{
+class Phone implements Serializable{
 	String name;
 	String tel;
 	int age;
@@ -195,3 +276,5 @@ class Phone{
 		this.add = add;
 	}
 }
+
+
