@@ -49,7 +49,7 @@ public class JdbcTest06 {
 			case 4:
 				selectList();
 				break;
-			case 5:
+			case 0:
 				System.out.println("프로그램이 종료되었습니다");
 				System.exit(0);
 				break;
@@ -63,6 +63,9 @@ public class JdbcTest06 {
 		
 		System.out.print("아이디 입력 > ");
 		String id = sc.nextLine();
+		
+		search(id);
+		
 		System.out.print("이름 입력 > ");
 		String name = sc.nextLine();
 		System.out.print("전화번호 입력 > ");
@@ -74,8 +77,6 @@ public class JdbcTest06 {
 		member.add(name);
 		member.add(tel);
 		member.add(addr);
-		
-		
 		
 		insertSql(member);
 		
@@ -189,7 +190,6 @@ public class JdbcTest06 {
 			if (rs != null) try {rs.close();} catch (Exception e) {}
 			if (ps != null) try {ps.close();} catch (Exception e) {}
 			if (con != null) try {con.close();} catch (Exception e) {}
-
 		}
 
 		return result;
@@ -222,25 +222,16 @@ public class JdbcTest06 {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (Exception e) {
-				}
-			if (ps != null)
-				try {
-					ps.close();
-				} catch (Exception e) {
-				}
-			if (con != null)
-				try {
-					con.close();
-				} catch (Exception e) {
-				}
-
+			if (rs != null)try {rs.close();	} catch (Exception e) {}
+			if (ps != null)try {ps.close();} catch (Exception e) {}
+			if (con != null)try {con.close();} catch (Exception e) {}
 		}
 
 		return list;
 	}
 	
+	public static boolean search(String id){
+		
+		return false;
+	}
 }

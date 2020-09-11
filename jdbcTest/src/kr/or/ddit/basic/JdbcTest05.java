@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import kr.or.ddit.util.DBUtil;
+
 //lprod테이블에 새로운 데이터 추가하기
 
 //lprod_gu와 lprod_nm은 직접 입력받아서 처리, lprod_id는 현제의 lprod_id 중 제일 큰 값보다 1크게 한다.
@@ -24,9 +26,11 @@ public class JdbcTest05 {
 	    ResultSet rs = null;
 	    
 	    try {
-	    	Class.forName("oracle.jdbc.driver.OracleDriver");
-	        con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "ANDANTE", "java");
+//	    	Class.forName("oracle.jdbc.driver.OracleDriver");
+//	        con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "ANDANTE", "java");
 	        
+	    	con = DBUtil.getConnection();
+	    			
 	        System.out.print("gu입력 : ");
 	        String gu = sc.nextLine();
 	        System.out.print("상품명 입력 : ");
@@ -38,9 +42,10 @@ public class JdbcTest05 {
 	    	rs = ps.executeQuery();
 	    	
 	    	String a = null;
-	    	 while(rs.next()){
+	    	while(rs.next()){
 	        	a = rs.getString("lprod_gu");
-	         }
+	        }
+	    	
 	    	int yb = 0;
 	    	
 	    	if(a != null){
@@ -56,10 +61,8 @@ public class JdbcTest05 {
 	    	}
 	    	
 	    	System.out.println("업데이트 : " + yb);
-	    	
+	    			
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} finally {
 			  if(rs != null) try { rs.close();} catch (SQLException e2){ }
