@@ -1,11 +1,18 @@
 package kr.or.ddit.mvc.controller;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import com.ibatis.common.resources.Resources;
+import com.ibatis.sqlmap.client.SqlMapClient;
+import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 
 import kr.or.ddit.mvc.service.IMemberService;
 import kr.or.ddit.mvc.service.MemberServiceImpl;
@@ -22,6 +29,8 @@ public class MemberController {
 	}
 	
 	public static void main(String[] args) {
+	
+		
 		new MemberController().startMember();
 	}
 	
@@ -48,7 +57,7 @@ public class MemberController {
 					System.out.println("작업을 마칩니다.");
 					return;
 				default : 
-					System.out.println("작업 번호를 잘못 입력했습니다.");
+					System.out.println("작업 번호를 잘못 입1력했습니다.");
 					System.out.println("다시 입력하세요.");
 			}
 		}
@@ -61,15 +70,17 @@ public class MemberController {
 		System.out.print("회원ID >> ");
 		String memId = scan.next();
 		
-		int count = service.getMemberCount(memId);
-		
-		if(count==0){  // 없는 회원이면...
-			System.out.println(memId + "은(는) 없은 회원ID입니다.");
-			System.out.println("삭제 작업을 종료합니다.");
-			return;
-		}
+//		int count = service.getMemberCount(memId);
+//		
+//		if(count==0){  // 없는 회원이면...
+//			System.out.println(memId + "은(는) 없은 회원ID입니다.");
+//			System.out.println("삭제 작업을 종료합니다.");
+//			return;
+//		}
 		
 		int cnt = service.deleteMember(memId);	//Service의 삭제용 메서드 호출
+		
+		
 		
 		if(cnt>0){
 			System.out.println(memId + "회원의 정보가 삭제되었습니다.");
@@ -221,16 +232,20 @@ public class MemberController {
 		
 		int cnt = 0;
 		String memId;
-		do{
-			System.out.print("회원 ID >> ");
-			memId = scan.next();
-			
-			cnt = service.getMemberCount(memId);
-			if(cnt>0){
-				System.out.println(memId + "은 이미 있는 ID입니다.");
-				System.out.println("다른 회원ID로 다시 입력하세요.");
-			}
-		}while(cnt>0);
+//		do{
+//			System.out.print("회원 ID >> ");
+//			memId = scan.next();
+//			
+//			cnt = service.getMemberCount(memId);
+//			if(cnt>0){
+//				System.out.println(memId + "은 이미 있는 ID입니다.");
+//				System.out.println("다른 회원ID로 다시 입력하세요.");
+//			}
+//		}
+//	while(cnt>0);
+		
+		System.out.print("회원 ID >> ");
+		memId = scan.next();
 		
 		System.out.print("회원 이름 >> ");
 		String memName = scan.next();

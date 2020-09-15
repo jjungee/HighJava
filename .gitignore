@@ -71,3 +71,13 @@ jdbcTest/.gitignore
 jdbcTest/.project
 jdbcTest/.settings/org.eclipse.core.resources.prefs
 jdbcTest/.settings/org.eclipse.jdt.core.prefs
+ibatisTest/.classpath
+ibatisTest/.gitignore
+ibatisTest/.project
+ibatisTest/.settings/org.eclipse.core.resources.prefs
+ibatisTest/.settings/org.eclipse.jdt.core.prefs
+team2/.classpath
+team2/.gitignore
+team2/.project
+team2/.settings/org.eclipse.core.resources.prefs
+team2/.settings/org.eclipse.jdt.core.prefs

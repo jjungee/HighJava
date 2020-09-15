@@ -12,13 +12,18 @@ public class MemberServiceImpl implements IMemberService{
 	
 	private static MemberServiceImpl memberService;
 	
-	private MemberServiceImpl(){ }
+	private MemberServiceImpl(){
+		dao = MemberDaoImpl.getInstance();
+		
+	}
 	
 	// 생성자
 	public static MemberServiceImpl getInstance() {
 		if(memberService == null) memberService = new MemberServiceImpl();
 		
 		return memberService;
+		
+		
 	}
 	
 	@Override
