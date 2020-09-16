@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+	"http://ibatis.apache.org/dtd/sql-mqp-2.dtd">
+
+<sqlMap namespace="board">
+	<insert id="insertBoard" parameterClass="board">
+		INSERT INTO tb_jdbc_board  (BOARD_NO, TITLE, CONTENT, USER_ID, REG_DAT)
+		 values (#board_no#, #title#, #content#, #user_id#, #reg_dat#)
+	</insert>
+	
+	<!-- 
+		select문에서만 resultClass를 써줌. 
+	-->
+	<select id="getBoardCount" parameterClass="String" resultClass="int">
+		SELECT * FROM tb_jdbc_board WHERE BOARD_NO = #board_no#
+	</select>
+	
+	<delete id="deleteBoard" parameterClass="String">
+		DELETE FROM tb_jdbc_board WHERE BOARD_NO = #board_no#
+	</delete>
+	
+	<update id="updateBoard" parameterClass="boardVo">
+		UPDATE tb_jdbc_board SET
+			TITLE = #title#, CONTENT = #content#, USER_ID = #user_id#, REG_DAT = #reg_dat#
+		WHERE BOARD_NO = #board_no#	
+	</update>
+	
+	<!-- 	
+		Java의  Map컬렉션을 파라미터로 받아서 처리할 때 '변수명' 역할은 Map의 key값으로 한다. 
+		
+		파라미터로 가져온 값을 컬럼명 등의 자리에서 사용할 경우에는 ($)기호를 사용해서 나타낸다.
+			ex) $변수명$ 또는 $key값$
+	-->
+	<update id="updateBoard2" parameterClass="java.util.Map">
+		UPDATE tb_jdbc_board SET $filed$ = #data#
+		WHERE MEM_ID = #mem_id#
+	</update>
+	
+	<select id="getAllBoard" resultClass="boardVo">
+		SELECT * FROM tb_jdbc_board
+	</select>
+</sqlMap>

@@ -16,6 +16,7 @@
 	 -->
 	
 	<!-- 
+	
 		id속성 => 실행할 태그를 호출할 때 사용되는 이름으로 위의 <sqlMap></sqlMap>태그의 namespace속성과 연결해서 사용한다. 
 			ex) lprod.insertLprod
 		
@@ -60,14 +61,43 @@
 		WHERE LPROD_GU = #lprod_gu#	
 	</select>
 </sqlMap>	
+
  -->
-<sqlMap namespace="mymember" >
+<sqlMap namespace="mymember">
 	<insert id="insertMember" parameterClass="memVO">
 		INSERT INTO mymember  (mem_id, mem_name, mem_tel, mem_addr)
 		 values (#mem_id#, #mem_name#, #mem_tel#, #mem_addr#)
 	</insert>
 	
+	<!-- 
+		select문에서만 resultClass를 써줌. 
+	-->
+	<select id="getMemberCount" parameterClass="String" resultClass="int">
+		SELECT * FROM mymember WHERE MEM_ID = #mem_id#
+	</select>
+	
 	<delete id="deleteMember" parameterClass="String">
 		DELETE FROM MYMEMBER WHERE MEM_ID = #mem_id#
 	</delete>
+	
+	<update id="updateMember" parameterClass="memVo">
+		UPDATE MYMEMBER SET
+			MEM_NAME = #mem_name#, MEM_TEL = #mem_tel#, MEM_ADDR = #mem_addr#
+		WHERE MEM_ID = #mem_id#	
+	</update>
+	
+	<!-- 	
+		Java의  Map컬렉션을 파라미터로 받아서 처리할 때 '변수명' 역할은 Map의 key값으로 한다. 
+		
+		파라미터로 가져온 값을 컬럼명 등의 자리에서 사용할 경우에는 ($)기호를 사용해서 나타낸다.
+			ex) $변수명$ 또는 $key값$
+	-->
+	<update id="updateMember2" parameterClass="java.util.Map">
+		UPDATE MYMEMBER SET $filed$ = #data#
+		WHERE MEM_ID = #memid#
+	</update>
+	
+	<select id="getAllMember" resultClass="memVo">
+		SELECT * FROM MYMEMBER
+	</select>
 </sqlMap>

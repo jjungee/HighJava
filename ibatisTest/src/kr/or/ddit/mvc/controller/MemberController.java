@@ -57,7 +57,7 @@ public class MemberController {
 					System.out.println("작업을 마칩니다.");
 					return;
 				default : 
-					System.out.println("작업 번호를 잘못 입1력했습니다.");
+					System.out.println("작업 번호를 잘못 입력했습니다.");
 					System.out.println("다시 입력하세요.");
 			}
 		}

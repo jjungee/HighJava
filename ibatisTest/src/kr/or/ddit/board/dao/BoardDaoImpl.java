@@ -1,4 +1,4 @@
-package kr.or.ddit.mvc.dao;
+package kr.or.ddit.board.dao;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -6,23 +6,25 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import kr.or.ddit.mvc.vo.MemberVO;
-
+import kr.or.ddit.board.vo.BoardVO;
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 
-public class MemberDaoImpl implements IMemberDao{
+public class BoardDaoImpl implements IBoardDao{
 	
-	private static MemberDaoImpl dao;
+	private static BoardDaoImpl dao;
 	private SqlMapClient smc; //ibatis용 SqlMapClient
 	
+	public static BoardDaoImpl getInstance(){
+		if(dao == null){
+			dao = new BoardDaoImpl();
+		}
+		return dao;
+	}
 	
-	private MemberDaoImpl(){
+	private BoardDaoImpl(){
 		try {
-			
-		
 		//1. iBatis설정 파일을 읽어와서 실행한다. (sqlMapConfig.xml파일)
 		// 1-1. 문자인코딩 케릭터 셋 설정
 		Charset charset = Charset.forName("UTF-8");
@@ -40,83 +42,76 @@ public class MemberDaoImpl implements IMemberDao{
 			e.printStackTrace();
 		}
 	}
-	
-	public static MemberDaoImpl getInstance(){
-		if(dao == null){
-			dao = new MemberDaoImpl();
-		}
-		return dao;
-	}
+
 
 	@Override
-	public int insertMember(MemberVO memVo) {
-		int cnt =0;
-		try {
-			Object obj = smc.insert("mymember.insertMember", memVo);
-			if(obj==null) cnt=1;
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return cnt;
-	}
-
-	@Override
-	public int deleteMember(String memId) {
-		int cnt =0;
-		try {
-			cnt = smc.delete("mymember.deleteMember", memId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return cnt;
-	}
-
-	@Override
-	public int updateMember(MemberVO memVo) {
-		int cnt =0;
+	public int insertBoard(BoardVO boardVo) {
+		int cnt = 0;
 		
 		try {
-			cnt = smc.update("mymember.updateMember", memVo);
+			Object obj = smc.insert("board.insertBoard", boardVo);
+			if(obj == null) cnt++;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return cnt;
 	}
 
+
 	@Override
-	public List<MemberVO> getAllMember() {
-		List<MemberVO> list = new ArrayList<>();
-		
+	public int deleteBoard(int boardNo) {
+		int cnt = 0;
 		try {
-			list = smc.queryForList("mymember.getAllMember");
+			cnt = smc.delete("board.deleteBoard", boardNo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return cnt;
+	}
+
+
+	@Override
+	public int updateBoard(BoardVO boardVo) {
+		int cnt = 0;
+		try {
+			cnt = smc.update("board.updateBoard", boardVo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return cnt;
+	}
+
+
+	@Override
+	public int updateBoard2(Map<String, String> paramMap) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public List<BoardVO> getAllBoard() {
+		List<BoardVO> list = new ArrayList<>();
+		try {
+			list = smc.queryForList("board.getAllBoard");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return list;
-	}	
-	
+	}
+
+
 	@Override
-	public int getMemberCount(String memId) {
-		
-		int cnt =0;
+	public int getBoardCount(int boardNo) {
+		int cnt = 0;
 		try {
-			cnt = (int) smc.queryForObject("mymember.getMemberCount", memId);
+			cnt = (int)smc.queryForObject("board.getboardCount", boardNo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return cnt;
 	}
 
-	@Override
-	public int updateMember2(Map<String, String> paramMap) {
-		int cnt = 0;
-		try {
-			cnt = smc.update("mymember.updateMember2", paramMap);
-		} catch (Exception e) {
-		}
-		return cnt;
-	}
 
-	
+
 }
