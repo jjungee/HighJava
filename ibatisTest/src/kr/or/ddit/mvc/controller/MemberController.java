@@ -2,13 +2,18 @@ package kr.or.ddit.mvc.controller;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import oracle.security.o5logon.a;
 
 import com.ibatis.common.resources.Resources;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -17,24 +22,26 @@ import com.ibatis.sqlmap.client.SqlMapClientBuilder;
 import kr.or.ddit.mvc.service.IMemberService;
 import kr.or.ddit.mvc.service.MemberServiceImpl;
 import kr.or.ddit.mvc.vo.MemberVO;
+import kr.or.ddit.util.AES256Util;
+import kr.or.ddit.util.CryptoUtil;
 
 public class MemberController {
 	
 	private Scanner scan;
 	private IMemberService service;	// Service객체 변수 선언
+	private AES256Util aes256;
 	
-	public MemberController() {
+	public MemberController() throws UnsupportedEncodingException {
 		service = MemberServiceImpl.getInstance();
 		scan = new Scanner(System.in);
+		aes256 = new AES256Util();
 	}
 	
-	public static void main(String[] args) {
-	
-		
+	public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException, GeneralSecurityException {
 		new MemberController().startMember();
 	}
 	
-	public void startMember(){
+	public void startMember() throws NoSuchAlgorithmException, UnsupportedEncodingException, GeneralSecurityException{
 		while(true){
 			int choice = displayMenu();
 			switch(choice){
@@ -79,8 +86,6 @@ public class MemberController {
 //		}
 		
 		int cnt = service.deleteMember(memId);	//Service의 삭제용 메서드 호출
-		
-		
 		
 		if(cnt>0){
 			System.out.println(memId + "회원의 정보가 삭제되었습니다.");
@@ -159,13 +164,13 @@ public class MemberController {
 	}
 	
 	// 자료 수정  ==> 전체 컬럼 수정(id제외)
-	private void updateMember(){
+	private void updateMember() throws NoSuchAlgorithmException, UnsupportedEncodingException, GeneralSecurityException{
 		System.out.println();
 		System.out.println("수정할 회원 정보를 입력하세요.");
 		System.out.print("회원ID >> ");
 		String memId = scan.next();
 		
-		int count = service.getMemberCount(memId);
+		int count = service.getMemberCount(aes256.encrypt(memId));
 		if(count==0){  // 없는 회원이면...
 			System.out.println(memId + "은(는) 없은 회원ID입니다.");
 			System.out.println("수정 작업을 종료합니다.");
@@ -183,7 +188,7 @@ public class MemberController {
 		String memAddr = scan.nextLine();
 		
 		MemberVO memVo = new MemberVO();
-		memVo.setMem_id(memId);
+		memVo.setMem_id(aes256.encrypt(memId));
 		memVo.setMem_name(memName);
 		memVo.setMem_tel(memTel);
 		memVo.setMem_addr(memAddr);
@@ -198,7 +203,7 @@ public class MemberController {
 	}
 	
 	// 전체 자료 출력
-	private void displayMember(){
+	private void displayMember() throws NoSuchAlgorithmException, UnsupportedEncodingException, GeneralSecurityException{
 		// 전체 회원 정보를 가져오는 메서드를 호출하여 List객체 변수에 저장한다.
 		List<MemberVO> memList = service.getAllMember();
 		
@@ -212,7 +217,7 @@ public class MemberController {
 		}else{
 			// List의 데이터 개수만큼 반복 처리
 			for(MemberVO memVo : memList){
-				System.out.print(memVo.getMem_id() + "\t");
+				System.out.print(aes256.decrypt(memVo.getMem_id()) + "\t");
 				System.out.print(memVo.getMem_name() + "\t");
 				System.out.print(memVo.getMem_tel() + "\t");
 				System.out.println(memVo.getMem_addr() + "\t");
@@ -224,7 +229,7 @@ public class MemberController {
 	}
 	
 	// 추가 메서드
-	private void insertMember(){
+	private void insertMember() throws NoSuchAlgorithmException, UnsupportedEncodingException, GeneralSecurityException{
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		System.out.println();
@@ -246,6 +251,7 @@ public class MemberController {
 		
 		System.out.print("회원 ID >> ");
 		memId = scan.next();
+		String memId256 = aes256.encrypt(memId);	
 		
 		System.out.print("회원 이름 >> ");
 		String memName = scan.next();
@@ -259,7 +265,7 @@ public class MemberController {
 		
 		//insert할 데이터(입력받은 데이터)를 MemberVO객체에 담는다.
 		MemberVO memVo = new MemberVO();
-		memVo.setMem_id(memId);
+		memVo.setMem_id(memId256);
 		memVo.setMem_name(memName);
 		memVo.setMem_tel(memTel);
 		memVo.setMem_addr(memAddr);

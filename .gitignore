@@ -81,3 +81,14 @@ team2/.gitignore
 team2/.project
 team2/.settings/org.eclipse.core.resources.prefs
 team2/.settings/org.eclipse.jdt.core.prefs
+javaCryptoTest/.classpath
+javaCryptoTest/.gitignore
+javaCryptoTest/.project
+javaCryptoTest/.settings/org.eclipse.core.resources.prefs
+javaCryptoTest/.settings/org.eclipse.jdt.core.prefs
+javaCryptoTest/lib/commons-codec-1.15.jar
+javaLogTest/.classpath
+javaLogTest/.gitignore
+javaLogTest/.project
+javaLogTest/.settings/org.eclipse.core.resources.prefs
+javaLogTest/.settings/org.eclipse.jdt.core.prefs
